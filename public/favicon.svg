@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <!--
+    파비콘. 내비게이션 로고 옆의 주황 점을 그대로 키운 형태다.
+    탭에서 16px 로 줄어들므로 획을 두껍게 잡는다 — 얇은 선은 그 크기에서 사라진다.
+  -->
+  <rect width="32" height="32" rx="7" fill="#151210" />
+  <circle cx="16" cy="16" r="8.5" fill="none" stroke="#fd7a28" stroke-width="3" />
+  <circle cx="16" cy="16" r="2.5" fill="#fd7a28" />
+</svg>

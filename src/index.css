@@ -1,0 +1,283 @@
+@import "tailwindcss";
+
+/*
+  콘솔(OPTiCS-Hub-Console/src/index.css)의 토큰을 그대로 승계한다.
+  랜딩에서 새 팔레트를 만들면 제품 스크린샷이 붙는 순간 색이 어긋나 보인다.
+  값을 바꿔야 한다면 콘솔에서 먼저 바꾸고 여기로 옮긴다.
+
+  어두운 바탕에서는 브랜드 주황 #fd7a28 의 대비가 6.9:1 이라
+  채움과 텍스트에 같은 값을 써도 된다. 라이트로 가면 이 전제가 깨진다
+  (docs/landing-design.md 의 '라이트 검토 기록' 참조).
+
+  콘솔 값을 그대로 쓰지 않는 토큰이 둘 있다. 아래 tertiary-text-color 와,
+  @theme 안에 따로 적어 둔 on-accent-color 다.
+
+  예외 ① — tertiary-text-color 는 콘솔 값(#75706c)을 쓰지 않는다.
+  배경 3종(#1a1715/#151210/#232020) 기준 WCAG 상대휘도로 직접 계산하면
+  #75706c 는 각각 3.64 / 3.81 / 3.30 : 1 로, 이 토큰이 실제로 쓰이는
+  각주·text-2xs/3xs 같은 작은 글씨의 AA 기준(4.5:1)에 못 미친다.
+  콘솔은 이 토큰을 더 큰 UI 라벨 위주로 써서 넘어갔지만 랜딩은 본문
+  각주에 쓰므로 그대로 가져오면 안 된다. #8d8782 로 한 단계 올리면
+  가장 불리한 배경(#232020, 가장 밝음) 기준으로도 4.56:1 로 통과한다
+  (1a1715: 5.03:1, 151210: 5.26:1, 232020: 4.56:1). secondary(#aaa4a0,
+  7.24:1)와는 여전히 채도·명도 차가 뚜렷해 위계가 무너지지 않는다.
+*/
+@theme {
+  /* 브랜드 / 액센트 */
+  --color-service-color: #fd7a28;
+  --color-button-hover-color: #ff8c42;
+  --color-button-progress-color: #d9661c;
+  /*
+    주황 채움 위에 올라가는 글자색(Button primary, 건너뛰기 링크). 흰색이다.
+
+    대비는 기준에 못 미친다. 측정값은 다음과 같다.
+      service #fd7a28  2.63:1
+      hover   #ff8c42  2.31:1
+      active  #d9661c  3.58:1
+    버튼 라벨이 14px semibold 라 큰 글씨 예외(3:1)도 적용되지 않으므로 WCAG AA 의
+    4.5:1 을 세 상태 모두 통과하지 못한다. 한때 웜 블랙 #241d18(6.32 / 7.19 / 4.64)
+    을 썼던 것은 그 때문이었고, 흰색으로 되돌린 것은 그 수치를 알고 내린 결정이다.
+    이 자리를 다시 만지는 사람이 '실수로 남은 값'으로 오해하지 않도록 적어 둔다.
+
+    대비를 되찾으면서 흰 글씨를 유지하려면 채움을 어둡게 하는 방법뿐이다 —
+    같은 색상·채도에서 명도를 74% 로 내린 #bb5a1e 가 흰 글씨로 4.57:1 이 된다.
+    다만 그건 브랜드 주황을 바꾸는 일이라 이 파일 혼자 정할 문제가 아니다.
+  */
+  --color-on-accent-color: #ffffff;
+
+  /* 배경 레이어 (어두움 → 밝음) */
+  --color-background-gradation-color: #151210;
+  --color-background-color: #1a1715;
+  --color-modal-background-color: #232020;
+  --color-modal-box-color: #2b2826;
+  --color-surface-hover-color: #302c2a;
+  --color-surface-active-color: #3a3532;
+
+  /* 보더 */
+  --color-border-color: #393431;
+  --color-border-strong-color: #4a443f;
+
+  /* 텍스트 — 검정 없음, 전부 밝은 톤 */
+  --color-primary-text-color: #eae7e4;
+  --color-secondary-text-color: #aaa4a0;
+  --color-tertiary-text-color: #8d8782;
+
+  /* 상태색 */
+  --color-success-color: #6db98f;
+  --color-warning-color: #e8c468;
+  --color-danger-color: #e0726a;
+}
+
+/*
+  Tailwind 기본 스케일은 xs(12px)에서 멈춘다. 그 아래를 임의값으로 쓰면
+  font-size 만 잡히고 line-height 가 조상에서 상속돼 높이가 들쭉날쭉해진다.
+  콘솔과 동일한 사다리를 정의해 크기를 쓰면 행높이가 따라오게 한다.
+*/
+@theme {
+  --text-2xs: 0.6875rem;
+  --text-2xs--line-height: 1rem;
+  --text-3xs: 0.625rem;
+  --text-3xs--line-height: 0.875rem;
+  --text-4xs: 0.5625rem;
+  --text-4xs--line-height: 0.75rem;
+}
+
+html {
+  scroll-behavior: smooth;
+  /*
+    앵커로 이동할 때 고정 헤더가 제목을 덮지 않게 한다.
+    헤더 높이(약 57px)에 한 호흡을 더한 값이다.
+  */
+  scroll-padding-top: 5.5rem;
+  color-scheme: dark;
+}
+
+body {
+  background-color: var(--color-background-color);
+  color: var(--color-primary-text-color);
+  /* 한글 본문이 어절 중간에서 끊기지 않게 한다. 콘솔의 break-keep 규칙 승계. */
+  word-break: keep-all;
+  -webkit-font-smoothing: antialiased;
+  /*
+    가로 overflow 는 다이어그램 하나만 삐져나와도 페이지 전체가 흔들린다.
+    각 다이어그램이 자기 컨테이너에서 스크롤하도록 짰지만, 마지막 방어선을 둔다.
+  */
+  overflow-x: hidden;
+}
+
+::selection {
+  background-color: color-mix(in srgb, var(--color-service-color) 30%, transparent);
+  color: var(--color-primary-text-color);
+}
+
+/*
+  배포 로그 한 줄이 나타날 때. 아래에서 살짝 밀려 올라오며 떠오른다.
+  ease-out 은 초반이 급해 '툭' 튀어나오므로 감속이 완만한 곡선을 쓴다 (콘솔 툴팁과 같은 곡선).
+*/
+@keyframes optics-log-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.optics-log-in {
+  animation: optics-log-in 260ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/*
+  클릭 파문. 포인터 끝점에서 원이 퍼져 나간다.
+  포인터만 겹쳐 두면 '거기 있다'까지만 보이고 '눌렀다'가 안 보인다.
+
+  translate(-50%, -50%) 를 키프레임 안에 같이 넣어야 한다.
+  transform 은 통째로 덮어쓰이므로 유틸리티 클래스로 준 중앙 정렬이 애니메이션 중에 풀린다.
+*/
+@keyframes optics-click {
+  from {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(0.3);
+  }
+
+  to {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+.optics-click {
+  animation: optics-click 260ms cubic-bezier(0.2, 0.7, 0.3, 1) forwards;
+}
+
+/* 커서 깜빡임. 빌드가 아직 돌고 있다는 유일한 신호라 너무 빠르면 초조해 보인다. */
+@keyframes optics-caret {
+  0%, 45% { opacity: 1; }
+  55%, 100% { opacity: 0.15; }
+}
+
+.optics-caret {
+  animation: optics-caret 1100ms steps(1, end) infinite;
+}
+
+/*
+  스크롤 진입 시 한 번만 도는 등장 모션.
+
+  화면에 들어온 블록이 아주 살짝 떠오른다. parallax 도 아니고 계속 움직이지도 않는다 —
+  읽는 순서를 만들어 주는 용도라 한 번 나타나면 끝이다.
+
+  IntersectionObserver 를 못 쓰는 환경(구형 브라우저, JS 비활성)에서도 내용이
+  사라지면 안 되므로 기본값을 '보이는 상태'로 두고, 관찰자가 붙었을 때만
+  data-reveal="pending" 을 걸어 숨긴다. 반대로 짜면 JS 가 안 돌 때 백지가 된다.
+*/
+@keyframes optics-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+[data-reveal='pending'] {
+  opacity: 0;
+}
+
+[data-reveal='shown'] {
+  animation: optics-reveal 620ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* 모션을 끄면 등장 자체를 없앤다. 숨겨진 채로 남지 않게 값을 되돌린다. */
+  [data-reveal='pending'],
+  [data-reveal='shown'] {
+    opacity: 1;
+    animation: none;
+    transform: none;
+  }
+}
+
+/*
+  형광펜.
+
+  중요한 어절 뒤로 색 띠가 왼쪽에서 오른쪽으로 그어진다. 배경을 통째로 칠하지 않고
+  아래쪽 42%만 덮는 이유는, 실제 형광펜이 글자를 덮지 않고 밑을 지나가기 때문이다.
+  글자 전체를 칠하면 대비가 떨어지고 '선택된 텍스트'처럼 보인다.
+
+  background-size 만 애니메이션한다. width 나 transform 으로 띠를 늘리면 인라인
+  요소 안에서 줄바꿈될 때 두 줄에 걸친 띠가 어긋난다. background 는 조각마다
+  따로 그려지므로 여러 줄에 걸쳐도 각각 자연스럽게 채워진다.
+
+  기본값은 '그어지지 않은 상태'가 아니라 '다 그어진 상태'여야 한다 — JS 가 없거나
+  관찰자가 못 붙으면 강조가 영영 안 나타나는 대신, 애니메이션만 없는 편이 낫다.
+  그래서 pending 일 때만 0% 로 되돌린다(Reveal 과 같은 규칙).
+*/
+@keyframes optics-mark-in {
+  from {
+    background-size: 0% 100%;
+  }
+
+  to {
+    background-size: 100% 100%;
+  }
+}
+
+.optics-mark {
+  background-image: linear-gradient(
+    to top,
+    color-mix(in srgb, var(--color-service-color) 28%, transparent) 42%,
+    transparent 42%
+  );
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  padding-inline: 0.12em;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+
+.optics-mark[data-mark='pending'] {
+  background-size: 0% 100%;
+}
+
+.optics-mark[data-mark='shown'] {
+  animation: optics-mark-in 620ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .optics-mark[data-mark='pending'],
+  .optics-mark[data-mark='shown'] {
+    background-size: 100% 100%;
+    animation: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/*
+ * 키보드 포커스.
+ *
+ * 기본 outline 은 다크 배경에서 거의 보이지 않는다. 마우스 클릭에는 뜨지 않고
+ * 키보드로 이동할 때만 뜨도록 :focus-visible 을 쓴다. 색은 액센트를 그대로 쓰되
+ * offset 을 줘서 버튼 테두리와 겹쳐 뭉개지지 않게 한다.
+ */
+:focus-visible {
+  outline: 2px solid var(--color-service-color);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
