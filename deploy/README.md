@@ -4,12 +4,16 @@
 릴리스를 밀어 넣고 심링크를 갈아끼운다. 컨테이너도, nginx reload 도 없다.
 
 ```
-/srv/optics-landing/
-├── releases/
-│   ├── <옛 sha>/          최근 5개까지 남는다
-│   └── <새 sha>/          rsync 로 방금 올라온 dist/
-└── current -> releases/<새 sha>
+/srv/release/
+├── landing -> landing.releases/<새 sha>   ← nginx root
+└── landing.releases/
+    ├── <옛 sha>/          최근 5개까지 남는다
+    └── <새 sha>/          rsync 로 방금 올라온 dist/
 ```
+
+`landing` 은 디렉터리가 아니라 심링크다. 손으로 배포할 때 `rsync ... /srv/release/landing/` 로
+밀어넣으면 rsync 가 심링크를 따라가 릴리스 디렉터리를 직접 고쳐버린다. 항상
+`landing.releases/<sha>/` 에 올리고 심링크를 옮긴다.
 
 배포 직전에 페이지를 연 브라우저는 여전히 옛 해시 자산(`/assets/main-<옛해시>.js`)을 요청한다.
 릴리스를 몇 개 남겨두는 건 그 요청들이 404 로 죽지 않게 하려는 것이다.
@@ -21,9 +25,9 @@
 ```sh
 # 배포 계정과 디렉터리. nginx 워커가 읽어야 하므로 상위 경로는 755 로 연다.
 sudo useradd -m -s /bin/bash deploy       # 이미 쓰는 계정이 있으면 생략
-sudo mkdir -p /srv/optics-landing/releases
-sudo chown -R deploy:deploy /srv/optics-landing
-sudo chmod 755 /srv /srv/optics-landing /srv/optics-landing/releases
+sudo mkdir -p /srv/release/landing.releases
+sudo chown -R deploy:deploy /srv/release
+sudo chmod 755 /srv /srv/release /srv/release/landing.releases
 ```
 
 배포 키를 만들어 공개키만 서버에 둔다. 로컬에서:
@@ -74,7 +78,7 @@ sudo ln -sfn /etc/nginx/sites-available/optics.run /etc/nginx/sites-enabled/opti
 sudo nginx -t && sudo systemctl reload nginx
 ```
 
-`root` 가 `current` 심링크를 가리키므로 **배포를 한 번 돌려 `current` 가 생긴 뒤에** 사이트를
+`root` 가 `landing` 심링크를 가리키므로 **배포를 한 번 돌려 `landing` 이 생긴 뒤에** 사이트를
 켠다. 순서가 바뀌면 `nginx -t` 는 통과하고 요청마다 404 가 난다.
 
 ## TLS
@@ -87,7 +91,7 @@ sudo nginx -t && sudo systemctl reload nginx
 서버에서 심링크만 되돌리면 된다.
 
 ```sh
-cd /srv/optics-landing
-ls -1dt releases/          # 남아 있는 릴리스 확인
-ln -sfn releases/<되돌릴 sha> current.tmp && mv -T current.tmp current
+cd /srv/release
+ls -1dt landing.releases/          # 남아 있는 릴리스 확인
+ln -sfn landing.releases/<되돌릴 sha> landing.tmp && mv -T landing.tmp landing
 ```
