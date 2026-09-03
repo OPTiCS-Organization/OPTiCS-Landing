@@ -1,0 +1,75 @@
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-production
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - run: npm ci
+
+      - name: Build
+        env:
+          VITE_API_URL: ${{ vars.VITE_API_URL }}
+        run: |
+          test -n "$VITE_API_URL" || { echo "::error::VITE_API_URL 저장소 변수가 비어 있습니다"; exit 1; }
+          npm run build
+
+      - name: Prepare SSH Key
+        env:
+          DEPLOY_SSH_KEY: ${{ secrets.DEPLOY_SSH_KEY }}
+          DEPLOY_HOST: ${{ vars.DEPLOY_HOST }}
+        run: |
+          install -m 700 -d ~/.ssh
+          printf '%s\n' "$DEPLOY_SSH_KEY" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          if [ -n "${{ vars.DEPLOY_HOST_KEY }}" ]; then
+            printf '%s\n' "${{ vars.DEPLOY_HOST_KEY }}" > ~/.ssh/known_hosts
+          else
+            ssh-keyscan -H "$DEPLOY_HOST" >> ~/.ssh/known_hosts 2>/dev/null
+          fi
+
+      - name: Publish New Release
+        env:
+          DEPLOY_HOST: ${{ vars.DEPLOY_HOST }}
+          DEPLOY_USER: ${{ vars.DEPLOY_USER }}
+        run: |
+          rsync -az --delete -e "ssh -i ~/.ssh/id_ed25519" \
+            dist/ "$DEPLOY_USER@$DEPLOY_HOST:/srv/optics-landing/releases/$GITHUB_SHA/"
+
+      - name: Replace current Symlink
+        env:
+          DEPLOY_HOST: ${{ vars.DEPLOY_HOST }}
+          DEPLOY_USER: ${{ vars.DEPLOY_USER }}
+        run: |
+          ssh -i ~/.ssh/id_ed25519 "$DEPLOY_USER@$DEPLOY_HOST" "bash -s -- $GITHUB_SHA" <<'REMOTE'
+          set -euo pipefail
+          sha="$1"
+          cd /srv/optics-landing
+
+          test -f "releases/$sha/index.html"
+
+          touch "releases/$sha"
+
+          ln -sfn "releases/$sha" current.tmp
+          mv -T current.tmp current
+
+          ls -1dt releases/*/ | tail -n +6 | xargs -r rm -rf
+
+          echo "deployed $sha -> $(readlink current)"
+          REMOTE
