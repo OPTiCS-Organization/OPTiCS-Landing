@@ -1,5 +1,7 @@
 node_modules
 dist
+# 프리렌더용 중간 산출물. dist 에 본문을 채워 넣고 나면 쓸 일이 없다.
+dist-ssr
 *.local
 .DS_Store
 

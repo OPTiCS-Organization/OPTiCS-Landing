@@ -1,0 +1,16 @@
+# https://optics.run/robots.txt
+#
+# 이 파일은 optics.run 한 호스트에만 적용된다. docs.optics.run 과 console.optics.run 은
+# 각자의 robots.txt 를 갖는 별개의 출처다 — 여기에 무엇을 적어도 그 둘에는 영향이 없다.
+# 특히 console 은 로그인 뒤의 화면이라 색인될 이유가 없는데, 그건 그쪽에서 막아야 한다.
+#
+# 막을 경로를 두지 않는다. 이 호스트가 내보내는 것은 랜딩과 요금 두 페이지, 그리고
+# 그 둘이 쓰는 정적 자산뿐이다. 없는 경로를 미리 Disallow 로 적어 두면 나중에 그 경로가
+# 실제로 생겼을 때 아무도 이 파일을 다시 보지 않는다.
+#
+# 크롤러별 규칙도 두지 않는다. 네이버(Yeti)·다음도 User-agent: * 를 따르므로, 개별
+# 이름을 나열하면 목록에 없는 크롤러가 생겼을 때 규칙이 갈라지기만 한다.
+User-agent: *
+Allow: /
+
+Sitemap: https://optics.run/sitemap.xml

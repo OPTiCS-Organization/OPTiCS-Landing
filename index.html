@@ -12,6 +12,15 @@
     <title>OPTiCS — Own your PC, Turn it into Cloud Server</title>
     <meta name="description" content="Git 저장소 URL 하나로 내 서버에 Docker 서비스를 배포하는 셀프호스팅 플랫폼. Agent가 Hub로 먼저 연결을 맺기 때문에 포트포워딩도, 공인 IP도 필요 없습니다." />
 
+    <!--
+      기본값(index, follow)과 같은 말이지만 적어 둔다. 뒤의 두 지시자를 쓰려면 어차피
+      이 태그가 있어야 하고, 그 김에 '색인을 막은 적이 없다'는 것이 파일에 남는다 —
+      노출이 안 될 때 가장 먼저 의심하게 되는 자리라서다.
+      max-image-preview:large 는 검색 결과에 큰 썸네일을 허용한다(OG 이미지가 1200x630 이다).
+      max-snippet:-1 은 발췌 길이 제한을 두지 않는다.
+    -->
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1" />
+
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="OPTiCS" />
     <meta property="og:title" content="OPTiCS — Your PC. Your Cloud." />
@@ -20,6 +29,7 @@
     <meta property="og:locale" content="ko_KR" />
 
     <meta property="og:image" content="https://optics.run/og.png" />
+    <meta property="og:image:type" content="image/png" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
     <meta property="og:image:alt" content="OPTiCS — Own Your PC, Turn it into a Cloud Server." />
@@ -29,6 +39,7 @@
     <meta name="twitter:description" content="Git 저장소 URL 하나로 내 서버에 Docker 서비스를 배포하는 셀프호스팅 플랫폼." />
 
     <meta name="twitter:image" content="https://optics.run/og.png" />
+    <meta name="twitter:image:alt" content="OPTiCS — Own Your PC, Turn it into a Cloud Server." />
 
     <link rel="canonical" href="https://optics.run/" />
 
@@ -56,7 +67,31 @@
           "@type": "Offer",
           "price": "0",
           "priceCurrency": "KRW"
-        }
+        },
+        "author": {
+          "@type": "Person",
+          "name": "acorn497"
+        },
+        "sameAs": ["https://github.com/OPTiCS-Organization"]
+      }
+    </script>
+
+    <!--
+      사이트 자체를 가리키는 항목. 위의 SoftwareApplication 이 '이 제품이 무엇인가'라면
+      이쪽은 '이 주소가 어느 사이트인가'다. 구글은 검색 결과 위에 찍는 사이트 이름을
+      이 name 에서 가져간다 — 없으면 도메인(optics.run)이나 <title> 을 잘라서 짐작한다.
+
+      SearchAction(사이트 내 검색)은 넣지 않는다. 이 사이트에는 검색 기능이 없고,
+      없는 기능을 선언하는 것은 구조화 데이터에서 가장 흔한 스팸 신고 사유다.
+    -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "OPTiCS",
+        "alternateName": "Own Your PC, Turn it into a Cloud Server",
+        "url": "https://optics.run/",
+        "inLanguage": "ko-KR"
       }
     </script>
   </head>

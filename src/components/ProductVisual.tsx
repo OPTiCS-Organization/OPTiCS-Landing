@@ -3,6 +3,7 @@ import {
   ArrowLeft, Check, ChevronLeft, GitBranch, LayoutPanelTop, Package,
   Lock, Play, Plus, RefreshCw, RotateCcw, Server, Settings2, Square, Terminal, Trash2,
 } from 'lucide-react'
+import { useReducedMotion } from '../hooks/useInView'
 
 /**
  * Hero 제품 비주얼. 실제 콘솔의 화면 흐름을 순서대로 재연한다.
@@ -857,10 +858,14 @@ export default function ProductVisual() {
   /*
    * 모션 설정은 첫 렌더에서 읽는다. useEffect 로 미루면 그 사이 한 프레임 동안
    * 다른 화면이 그려졌다가 바뀌면서 원치 않는 페이드가 눈에 띈다.
+   *
+   * 직접 matchMedia 를 부르지 않고 훅을 쓰는 이유는 window 가 없는 곳에서도 이
+   * 컴포넌트가 한 번 렌더되기 때문이다 — 빌드 때 크롤러용 HTML 을 뽑는
+   * 프리렌더가 Node 에서 돌린다(scripts/prerender.mjs). 훅 쪽에 typeof window
+   * 가드가 이미 있다. 이 파일에서 첫 렌더 중에 브라우저 API 를 읽는 곳은
+   * 여기 하나뿐이고, 나머지는 전부 effect 안이라 Node 에서 실행되지 않는다.
    */
-  const [reduced] = useState(
-    () => window.matchMedia('(prefers-reduced-motion: reduce)').matches,
-  )
+  const reduced = useReducedMotion()
   const [step, setStep] = useState(0)
   const [started, setStarted] = useState(false)
 

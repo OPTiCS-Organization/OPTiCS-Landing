@@ -78,8 +78,41 @@ sudo ln -sfn /etc/nginx/sites-available/optics.run /etc/nginx/sites-enabled/opti
 sudo nginx -t && sudo systemctl reload nginx
 ```
 
+이 파일에는 `www.optics.run` → `optics.run` 301 블록이 따로 있다. Cloudflare 에
+`www` 레코드가 없으면 그 블록에는 요청이 오지 않는다 — 레코드를 두지 않는 선택도
+같은 결과를 내지만, 누군가 나중에 `www` 를 만들었을 때 대비가 되어 있는 편이 낫다.
+
 `root` 가 `landing` 심링크를 가리키므로 **배포를 한 번 돌려 `landing` 이 생긴 뒤에** 사이트를
 켠다. 순서가 바뀌면 `nginx -t` 는 통과하고 요청마다 404 가 난다.
+
+## 검색엔진 등록
+
+여기까지는 크롤러가 와서 읽을 수 있는 상태를 만드는 것까지다. **와 달라고 말하는 것은
+사람이 한 번 해야 한다.** 링크가 거의 없는 새 도메인은 등록하지 않으면 몇 달 동안
+발견되지 않을 수 있다.
+
+| 도구 | 주소 | 왜 |
+| --- | --- | --- |
+| Google Search Console | https://search.google.com/search-console | 색인 상태·검색어·수동 색인 요청 |
+| 네이버 서치어드바이저 | https://searchadvisor.naver.com | 네이버는 등록하지 않으면 사실상 잡히지 않는다 |
+| Bing Webmaster Tools | https://www.bing.com/webmasters | Bing·Copilot·DuckDuckGo 가 같은 색인을 쓴다 |
+| 다음(카카오) | https://register.search.daum.net/index.daum | 등록 폼 한 번이면 끝난다 |
+
+구글·네이버·Bing 은 소유 확인을 요구한다(다음은 제출 폼뿐이다). **DNS TXT 레코드로 확인한다** — Cloudflare 대시보드에
+레코드를 하나 넣으면 되고, 재배포와 무관하게 남는다. HTML 파일 업로드나 `<meta>` 태그
+방식을 고르면 그 값이 이 저장소에 들어와야 하고, 도구를 추가할 때마다 한 줄씩 늘어난다.
+
+확인이 끝나면 각 도구에 사이트맵 주소를 넣는다.
+
+```
+https://optics.run/sitemap.xml
+```
+
+`robots.txt` 에도 같은 주소가 적혀 있지만, 그건 크롤러가 알아서 찾아왔을 때 읽는 것이고
+위 등록은 '지금 와서 읽어라'에 해당한다. 둘 다 해 둔다.
+
+새 페이지를 추가했거나 내용을 크게 고쳤을 때는 Search Console 의 URL 검사 → 색인 생성
+요청으로 한 번 밀어 준다. 기다리면 어차피 오지만, 며칠이 몇 시간이 된다.
 
 ## TLS
 

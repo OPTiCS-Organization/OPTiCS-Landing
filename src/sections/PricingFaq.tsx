@@ -10,7 +10,8 @@ import Section from '../components/ui/Section'
  *
  * 아직 안 되는 것(팀 관리)도 그대로 적는다.
  */
-const FAQ = [
+/** 랜딩의 FAQ 와 같은 이유로 내보낸다 — /pricing 의 FAQPage 구조화 데이터가 이 배열에서 나온다. */
+export const FAQ = [
   {
     question: `워크스페이스 도메인 ${WORKSPACE_DOMAIN_LIMIT}개의 의미는 무엇인가요?`,
     answer:

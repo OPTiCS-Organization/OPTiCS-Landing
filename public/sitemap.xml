@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  사이트맵. 주소는 canonical(index.html · pricing.html 의 <link rel="canonical">)과
+  글자 하나까지 같아야 한다 — 여기서 /pricing.html 로 적으면 검색 엔진에는 같은 문서가
+  두 주소로 존재하게 된다.
+
+  lastmod 를 넣지 않는다. 페이지가 둘뿐이라 손으로 적게 되는데, 손으로 적는 날짜는
+  반드시 낡는다. 그리고 낡은 lastmod 는 없는 것보다 나쁘다 — 검색 엔진이 그 값을
+  한 번 못 믿으면 이후로는 무시한다.
+
+  페이지를 추가하면 vite.config.ts 의 input, src/entry-server.tsx 의 PAGES,
+  그리고 이 파일 셋을 함께 고친다.
+-->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://optics.run/</loc>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://optics.run/pricing</loc>
+    <priority>0.8</priority>
+  </url>
+</urlset>

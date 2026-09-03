@@ -11,6 +11,9 @@
     <title>요금 — OPTiCS</title>
     <meta name="description" content="OPTiCS는 지금 전부 무료입니다. HTTPS 워크스페이스 도메인 3개, 서비스 배포 무제한, Agent 연결 무제한. 연산과 저장은 내 서버에서 수행됩니다." />
 
+    <!-- index.html 과 같은 이유. 이유는 그쪽 주석에 적어 두었다. -->
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1" />
+
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="OPTiCS" />
     <meta property="og:title" content="요금 — OPTiCS" />
@@ -19,6 +22,7 @@
     <meta property="og:locale" content="ko_KR" />
 
     <meta property="og:image" content="https://optics.run/og.png" />
+    <meta property="og:image:type" content="image/png" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
     <meta property="og:image:alt" content="OPTiCS — Own Your PC, Turn it into a Cloud Server." />
@@ -28,8 +32,37 @@
     <meta name="twitter:description" content="지금은 전부 무료입니다. 연산과 저장은 내 서버에서 수행됩니다." />
 
     <meta name="twitter:image" content="https://optics.run/og.png" />
+    <meta name="twitter:image:alt" content="OPTiCS — Own Your PC, Turn it into a Cloud Server." />
 
     <link rel="canonical" href="https://optics.run/pricing" />
+
+    <!--
+      이 페이지가 랜딩 아래에 있다는 것을 알린다. 검색 결과의 주소 줄이
+      'optics.run › 요금' 으로 찍힌다.
+
+      이 페이지의 FAQPage 구조화 데이터는 여기 없다. PricingFaq 의 질문 배열에서
+      빌드 때 만들어져 들어간다(src/entry-server.tsx). 답을 두 곳에 두지 않기 위해서다.
+    -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "OPTiCS",
+            "item": "https://optics.run/"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "요금",
+            "item": "https://optics.run/pricing"
+          }
+        ]
+      }
+    </script>
   </head>
   <body>
     <div id="root"></div>

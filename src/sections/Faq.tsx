@@ -8,8 +8,13 @@ import Section from '../components/ui/Section'
  *
  * 답은 전부 OPTiCS-Hub / OPTiCS-Agent / OPTiCS-Infra 코드를 실제로 읽고 확인한 내용만 담는다.
  * 확인하지 못한 것은 "정해 둔 게 없다"고 적지, 그럴듯하게 지어내지 않는다.
+ *
+ * 이 배열은 구조화 데이터(FAQPage)의 출처이기도 하다. 프리렌더가 여기서 바로 읽어
+ * `<script type="application/ld+json">` 을 만든다(scripts/prerender.mjs).
+ * index.html 에 손으로 한 벌 더 적어 두면 답을 고칠 때 화면과 검색 결과가 갈라지고,
+ * 그 어긋남은 스팸으로 처리된다. 출처는 이 배열 하나다.
  */
-const FAQ = [
+export const FAQ = [
   {
     question: 'Hub에 장애가 발생하면 서비스도 함께 중단되나요?',
     answer:
